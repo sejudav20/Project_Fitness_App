@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardViewLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:cardBackgroundColor="#4D9AEC">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clcard"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="150dp"
+            android:layout_height="94dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginLeft="14dp"
+            android:layout_marginEnd="14dp"
+            android:layout_marginRight="14dp"
+            android:layout_marginBottom="2dp"
+            android:background="@color/design_default_color_error"
+            app:layout_constraintBottom_toTopOf="@+id/palyeramountdisplay"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/gametitle"
+            app:srcCompat="@drawable/mr_media_play_light" />
+
+        <TextView
+            android:id="@+id/palyeramountdisplay"
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="1dp"
+            android:text="Players: 2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+        <TextView
+            android:id="@+id/gametitle"
+            android:layout_width="176dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="1dp"
+            android:layout_marginLeft="1dp"
+            android:layout_marginEnd="1dp"
+            android:layout_marginRight="1dp"
+            android:text="Game Example 1"
+            app:layout_constraintBottom_toTopOf="@+id/imageView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>
