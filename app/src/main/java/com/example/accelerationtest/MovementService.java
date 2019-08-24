@@ -114,6 +114,47 @@ public class MovementService extends Service {
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         gyro = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        
+        gyroscopeListener = new SensorEventListener() {
+            private static  final float nanotosec = 1.0f / 1000000000.0f;
+            private final float[] deltaRotationVector = new float[4];
+            private float timestamp;
+
+            @Override
+            public void onSensorChanged(SensorEvent sensorEvent) {
+            if(timeAtLastMovement != 0){
+                final float dT = (sensorEvent.timestamp -timestamp) * nanotosec;
+                float Xaxis = sensorEvent.values[0];
+                float Yaxis = sensorEvent.values[1];
+                float Zaxis = sensorEvent.values[2];
+
+                float omag = (float)sqrt(Xaxis*Xaxis + Yaxis*Yaxis + Zaxis*Zaxis);
+                float margin = 1;
+                //set a proper margin of error
+                if(omag > margin){
+                    Xaxis /= omag;
+                    Yaxis /= omag;
+                    Zaxis /= omag;
+                }
+
+                float angbytwo = omag *dT/2.0f;
+                float sinangbytwo = (float)sin(angbytwo);
+                float cosangbytwo = (float)cos(angbytwo);
+                deltaRotationVector[0] = sinangbytwo * Xaxis;
+                deltaRotationVector[1] = sinangbytwo * Yaxis;
+                deltaRotationVector[2] = sinangbytwo * Zaxis;
+                deltaRotationVector[3] = cosangbytwo;
+                }
+            timestamp = sensorEvent.timestamp;
+            float[] dRotationMatrix = new float[9];
+            SensorManager.getRotationMatrixFromVector(dRotationMatrix, deltaRotationVector);
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int i) {
+
+            }
+        };
 
 
 
