@@ -54,6 +54,7 @@ public class MovementService extends Service {
      * ----------------------------------------------------------------------
      * Methods:
      * setOnMovementListener(): this method gives access to the services linear motion through
+     * gyroscopeListener(): this method gives the rotaion along the axis (accounts for angles)
      * a movement listener interface. The abstract methods of this interface are as follows
      *      onMovementDone: this method is called everytime there is some acceleration and then a stop
      *      onFall: when the acceleration exceeds 10 m/s usually denoting the phone fell or was thrown
