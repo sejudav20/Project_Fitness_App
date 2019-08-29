@@ -7,30 +7,29 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.FrameLayout;
-import android.widget.Toolbar;
-import com.example.accelerationtest.ProfileFragment;
-import com.example.accelerationtest.ChatFragment;
-import com.example.accelerationtest.RecordsFragment;
-import com.example.accelerationtest.HomeFragment;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.Set;
 
-public class MainActivity extends AppCompatActivity implements HomeFragment.OnFragmentInteractionListener,ChatFragment.OnFragmentInteractionListener,ProfileFragment.OnFragmentInteractionListener,RecordsFragment.OnFragmentInteractionListener {
+
+public class MainActivity extends AppCompatActivity implements HomeFragment.OnFragmentInteractionListener, ChatFragment.OnFragmentInteractionListener, ProfileFragment.OnFragmentInteractionListener, RecordsFragment.OnFragmentInteractionListener {
     private ActionBar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.bottomNavigationView);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        toolbar=getSupportActionBar();
+        toolbar = getSupportActionBar();
         toolbar.setTitle("Home");
-
         loadFragment(new HomeFragment());
 
     }
@@ -72,9 +71,30 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnFr
     };
 
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.appbar, menu);
+        return true;
 
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                // User chose the "Settings" item, show the app settings UI...
 
+                startActivity(new Intent(this, SettingsActivity.class));
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
 
     @Override
     public void onFragmentInteraction(Uri uri) {
