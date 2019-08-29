@@ -1,5 +1,6 @@
 package com.example.accelerationtest;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.ActionBar;
@@ -20,6 +21,14 @@ public class SettingsActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+
+        Intent intent = new Intent(this,MainActivity.class);
+        startActivity(intent);
+        return true;
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
@@ -28,4 +37,5 @@ public class SettingsActivity extends AppCompatActivity {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
         }
     }
+
 }
