@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+ >
+    <item
+        android:id="@+id/homeActionButton"
+        android:title="@string/home"
+        android:icon="@drawable/ic_twotone_home_24px"/>
+    <item
+        android:id="@+id/chatActionButton"
+        android:title="@string/messages"
+        android:icon="@drawable/ic_twotone_textsms_24px"/>
+    <item
+        android:id="@+id/profileActionButton"
+        android:title="@string/profile"
+        android:icon="@drawable/ic_twotone_person_24px"/>
+    <item
+        android:id="@+id/recordsActionButton"
+        android:title="@string/records"
+        android:icon="@drawable/ic_twotone_format_list_bulleted_24px"/>
+
+</menu>
