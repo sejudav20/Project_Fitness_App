@@ -1,68 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".HomeFragment">
 
-    <ScrollView
-        android:id="@+id/Scroller"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <Button
+        android:id="@+id/createGame"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="0dp"
+        android:layout_height="78dp"
+        android:background="@drawable/round_rectangle_button_2"
+        android:shadowColor="#00FDF7F7"
+        android:text="New Game"
+        android:textColor="#020EF8"
+        android:textColorHint="#E61313"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/joinGame"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.487" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+    <Button
+        android:id="@+id/joinGame"
+        android:layout_width="0dp"
+        android:layout_height="82dp"
+        android:layout_marginBottom="100dp"
+        android:background="@drawable/round_rectangle_button_2"
+        android:text="Join Game"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@id/continued"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/CardView3"
-                android:layout_width="250dp"
-                android:layout_height="199dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp" />
+    <Button
+        android:id="@+id/continued"
+        android:layout_width="0dp"
+        android:layout_height="87dp"
+        android:layout_marginBottom="204dp"
+        android:background="@drawable/round_rectangle_button_2"
+        android:text="Continue Game"
+        android:textIsSelectable="false"
+        android:textSize="24sp"
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/CardView5"
-                android:layout_width="250dp"
-                android:layout_height="199dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp" />
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/CardView4"
-                android:layout_width="250dp"
-                android:layout_height="199dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp" />
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/CardView2"
-                android:layout_width="250dp"
-                android:layout_height="199dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp" />
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/CardView1"
-                android:layout_width="250dp"
-                android:layout_height="199dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp" />
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/CardView6"
-                android:layout_width="250dp"
-                android:layout_height="199dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp" />
-        </LinearLayout>
-    </ScrollView>
-
-</FrameLayout>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

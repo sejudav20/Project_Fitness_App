@@ -7,8 +7,8 @@
         android:icon="@drawable/ic_twotone_home_24px"/>
     <item
         android:id="@+id/chatActionButton"
-        android:title="@string/messages"
-        android:icon="@drawable/ic_twotone_textsms_24px"/>
+        android:icon="@drawable/ic_question"
+        android:title="@string/messages" />
     <item
         android:id="@+id/profileActionButton"
         android:title="@string/profile"

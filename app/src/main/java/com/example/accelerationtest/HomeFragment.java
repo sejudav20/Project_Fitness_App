@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,12 +31,14 @@ import java.util.ArrayList;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
+
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
+    private Button createNewButton;
+    private Button continueButton;
+    private Button joinButton;
     private String mParam1;
     private String mParam2;
 
@@ -66,7 +69,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        createGameCards();
+
     }
 
     @Override
@@ -76,6 +79,30 @@ public class HomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        continueButton= getView().findViewById(R.id.continued);
+        createNewButton= getView().findViewById(R.id.createGame);
+        joinButton= getView().findViewById(R.id.joinGame);
+        continueButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO check if there is a game with username in it
+                startActivity(new Intent(getActivity(),GameHome.class));
+
+            }
+        });
+
+        createNewButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(),NewGameActivity.class));
+            }
+        });
+        joinButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(),JoinActivity.class));
+            }
+        });
     }
 
     @Override
@@ -126,79 +153,6 @@ public class HomeFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    public void createGameCards() {
-        //initializing GameCards
-        CardView cardView1 = getView().findViewById(R.id.CardView1);
-        CardView cardView2 = getView().findViewById(R.id.CardView2);
-        CardView cardView3 = getView().findViewById(R.id.CardView3);
-        CardView cardView4 = getView().findViewById(R.id.CardView4);
-        CardView cardView5 = getView().findViewById(R.id.CardView5);
-        CardView cardView6 = getView().findViewById(R.id.CardView6);
-        ArrayList<CardView> cards = new ArrayList<>();
-
-        LayoutInflater inflater = getLayoutInflater();
-        inflater.inflate(R.layout.gamecard, cardView1, true);
-        inflater.inflate(R.layout.gamecard, cardView2, true);
-        inflater.inflate(R.layout.gamecard, cardView3, true);
-        inflater.inflate(R.layout.gamecard, cardView4, true);
-        inflater.inflate(R.layout.gamecard, cardView5, true);
-        inflater.inflate(R.layout.gamecard, cardView6, true);
-
-        //change any game cards below
-
-
-    }
-
-    public class GameCardView extends CardView {
-
-        private ConstraintLayout cl;
-        private ImageView iv;
-        private TextView PlayerAmountDisplay;
-        private TextView nameDisplay;
-
-        public GameCardView(@NonNull Context context) {
-            super(context);
-
-            cl = (ConstraintLayout) super.getChildAt(0);
-            PlayerAmountDisplay= (TextView) cl.getChildAt(2);
-            nameDisplay= (TextView) cl.getChildAt(1);
-            iv= (ImageView) cl.getChildAt(0);
-
-        }
-
-        public void addActivity(final AppCompatActivity activity) {
-            if (activity instanceof Minigame) {
-                super.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getContext(), activity.getClass());
-
-                        startActivity(intent);
-                    }
-                });
-                PlayerAmountDisplay.setText("Players: "+((Minigame) activity).getPlayers());
-                nameDisplay.setText(((Minigame) activity).getName());
-                iv.setImageResource(((Minigame) activity).getImageId());
-
-            } else {
-
-                throw new NoMinigameInterfaceError("It looks like you did not implement" +
-                        " the minigame interface in the activity attached to game card id: " + this.getId());
-            }
-
-
-        }
-
-        private class NoMinigameInterfaceError extends Error {
-            public NoMinigameInterfaceError(String errorMessage) {
-                super(errorMessage);
-
-
-            }
-
-        }
-
-    }
 
 
 }
