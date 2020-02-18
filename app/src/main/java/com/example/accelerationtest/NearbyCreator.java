@@ -1,11 +1,9 @@
 package com.example.accelerationtest;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.se.omapi.SEService;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.connection.AdvertisingOptions;
@@ -33,36 +31,40 @@ import androidx.core.content.ContextCompat;
 
 
 public class NearbyCreator {
-    public boolean haveConnections = false;
+    public List<String> connections;
     private Context context;
     private String id;
     private Strategy strategy;
-    private ArrayList<String> connections;
 
     //Creates a new NearbyCreator with an id that will be shared among all connections and a strategy
-    public NearbyCreator(Context context, String id, Strategy strategy) throws PermissionDeniedException {
+    public NearbyCreator(Activity context, String id, Strategy strategy)  {
+        connections= new ArrayList<>();
         this.context = context;
         this.id = id;
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            throw new PermissionDeniedException("ACCESS_COARSE_LOCATION");
+            getPermissionToUseNearby(context);
         }
-        connections = new ArrayList<>();
+
         this.strategy = strategy;
     }
+    ///Call this static method to get permission from user
+    public static void  getPermissionToUseNearby(Activity activityContext){
 
-    public boolean disconnect(String s) {
-        if (connections.contains(s)) {
-            connections.remove(s);
-            Nearby.getConnectionsClient(context).disconnectFromEndpoint(s);
-            return true;
+
+        if(ContextCompat.checkSelfPermission(activityContext, Manifest.permission.ACCESS_COARSE_LOCATION)!= PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(activityContext,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                    2);
         }
-        return false;
+
+
 
     }
 
-    //this method gets the original nearby class
-    public ConnectionsClient getNearbyClient() {
+    public ConnectionsClient getConnectionClient(){
+
         return Nearby.getConnectionsClient(context);
+
     }
 
     //stops trying to find new clients
@@ -80,17 +82,19 @@ public class NearbyCreator {
     }
 
     public boolean sendMessage(List<String> client, String message) {
-        if (!connections.containsAll(client)) {
-            return false;
+        if (connections.containsAll(client)) {
+            Nearby.getConnectionsClient(context).sendPayload(client, Payload.fromBytes(message.getBytes()));
+        }else{
+            for(String s:client){
+                if(connections.contains(s)){
+                    Nearby.getConnectionsClient(context).sendPayload(s, Payload.fromBytes(message.getBytes()));
+                }
+            }
         }
-        Nearby.getConnectionsClient(context).sendPayload(client, Payload.fromBytes(message.getBytes()));
         return true;
     }
 
     public boolean sendMessage(String client, String message) {
-        if (!connections.contains(client)) {
-            return false;
-        }
         Nearby.getConnectionsClient(context).sendPayload(client, Payload.fromBytes(message.getBytes()));
         return true;
     }
@@ -103,13 +107,13 @@ public class NearbyCreator {
             }
 
             @Override
-            public void OnFailure() {
-                optionsOfAdvertising.OnDiscoveryFailure();
+            public void OnFailure(Exception e) {
+                optionsOfAdvertising.OnDiscoveryFailure(e);
             }
         }, new ConnectionResult() {
             @Override
-            public void ConnectionGood() {
-                optionsOfAdvertising.OnConnectionGood();
+            public void ConnectionGood(String s) {
+                optionsOfAdvertising.OnConnectionGood(s);
             }
 
             @Override
@@ -128,8 +132,8 @@ public class NearbyCreator {
             }
         }, new StringReceived() {
             @Override
-            public void OnReceived(String s) {
-                optionsOfAdvertising.OnStringReceived();
+            public void OnStringReceived(String user, String s) {
+                optionsOfAdvertising.OnStringReceived(user,s);
             }
 
             @Override
@@ -147,7 +151,7 @@ public class NearbyCreator {
             @Override
             public void onPayloadReceived(@NonNull String s, @NonNull Payload payload) {
                 String es = new String(payload.asBytes());
-                stringOptions.OnReceived(es);
+                stringOptions.OnStringReceived(s,es);
             }
 
             @Override
@@ -168,8 +172,8 @@ public class NearbyCreator {
                 switch (result.getStatus().getStatusCode()) {
                     case ConnectionsStatusCodes.STATUS_OK:
                         // We're connected! Can now start sending and receiving data.
+                        connectionOptions.ConnectionGood(s);
                         connections.add(s);
-                        connectionOptions.ConnectionGood();
                         break;
                     case ConnectionsStatusCodes.STATUS_CONNECTION_REJECTED:
                         // The connection was rejected by one or both sides.
@@ -204,22 +208,29 @@ public class NearbyCreator {
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                options.OnSuccess();
+                options.OnFailure(e);
             }
         });
 
     }
+    public void stopAllConnections(){
+        Nearby.getConnectionsClient(context).stopAllEndpoints();
+    }
+    public void stopConnection(String s){
+        connections.remove(s);
+        getConnectionClient().disconnectFromEndpoint(s);
+    }
 
-    public void startDiscovery(String name, final OptionsOfDiscovery optionsOfDiscovery) {
-        startDiscovery(name, new OnDiscoveryTry() {
+    public void startDiscovery(String name,final OptionsOfDiscovery optionsOfDiscovery) {
+        startDiscovery(name,new OnDiscoveryTry() {
             @Override
             public void OnSuccess() {
                 optionsOfDiscovery.OnDiscoverySuccess();
             }
 
             @Override
-            public void OnFailure() {
-                optionsOfDiscovery.OnDiscoveryFailure();
+            public void OnFailure(Exception e) {
+                optionsOfDiscovery.OnDiscoveryFailure(e);
             }
         }, new OnEndPointFound() {
             @Override
@@ -234,8 +245,8 @@ public class NearbyCreator {
             }
 
             @Override
-            public void OnConnectionFailure() {
-                optionsOfDiscovery.OnConnectionFailure();
+            public void OnConnectionFailure(Exception e) {
+                optionsOfDiscovery.OnConnectionFailure(e);
             }
 
             @Override
@@ -244,8 +255,8 @@ public class NearbyCreator {
             }
         }, new ConnectionResult() {
             @Override
-            public void ConnectionGood() {
-                optionsOfDiscovery.OnConnectionGood();
+            public void ConnectionGood(String s) {
+                optionsOfDiscovery.OnConnectionGood(s);
             }
 
             @Override
@@ -264,8 +275,8 @@ public class NearbyCreator {
             }
         }, new StringReceived() {
             @Override
-            public void OnReceived(String s) {
-                optionsOfDiscovery.OnStringReceived();
+            public void OnStringReceived(String s1, String s) {
+                optionsOfDiscovery.OnStringReceived(s1,s);
             }
 
             @Override
@@ -284,7 +295,8 @@ public class NearbyCreator {
             @Override
             public void onPayloadReceived(@NonNull String s, @NonNull Payload payload) {
                 String es = new String(payload.asBytes());
-                stringOptions.OnReceived(es);
+                if(connections.contains(s)){
+                    stringOptions.OnStringReceived(s, es);}
             }
 
             @Override
@@ -305,7 +317,7 @@ public class NearbyCreator {
                 switch (result.getStatus().getStatusCode()) {
                     case ConnectionsStatusCodes.STATUS_OK:
                         // We're connected! Can now start sending and receiving data.
-                        connectionOptions.ConnectionGood();
+                        connectionOptions.ConnectionGood(s);
                         break;
                     case ConnectionsStatusCodes.STATUS_CONNECTION_REJECTED:
                         // The connection was rejected by one or both sides.
@@ -347,7 +359,7 @@ public class NearbyCreator {
                                 new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        endPointOption.OnConnectionFailure();
+                                        endPointOption.OnConnectionFailure(e);
                                     }
                                 });
             }
@@ -370,23 +382,23 @@ public class NearbyCreator {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                options.OnFailure();
+                options.OnFailure(e);
 
             }
         });
 
     }
 
-    private interface OptionsOfAdvertising {
+    public  interface OptionsOfAdvertising {
         void OnDiscoverySuccess();
 
-        void OnDiscoveryFailure();
+        void OnDiscoveryFailure(Exception e);
 
-        void OnStringReceived();
+        void OnStringReceived(String user, String s);
 
         void OnStringUpdate();
 
-        void OnConnectionGood();
+        void OnConnectionGood(String s);
 
         void OnConnectionError();
 
@@ -397,16 +409,16 @@ public class NearbyCreator {
 
 
     //This interface is a combination of the ones below
-    private interface OptionsOfDiscovery {
+    public interface OptionsOfDiscovery {
         void OnDiscoverySuccess();
 
-        void OnDiscoveryFailure();
+        void OnDiscoveryFailure(Exception e);
 
-        void OnStringReceived();
+        void OnStringReceived(String user, String s);
 
         void OnStringUpdate();
 
-        void OnConnectionGood();
+        void OnConnectionGood(String s);
 
         void OnConnectionError();
 
@@ -418,7 +430,7 @@ public class NearbyCreator {
 
         void OnConnectionSuccess();
 
-        void OnConnectionFailure();
+        void OnConnectionFailure(Exception e);
 
         //If connection is lost
         void OnConnectionLost();
@@ -429,19 +441,19 @@ public class NearbyCreator {
     private interface OnDiscoveryTry {
         void OnSuccess();
 
-        void OnFailure();
+        void OnFailure(Exception e);
     }
 
     //this interface is called when the app advertises
     private interface OnAdvertisingTry {
         void OnSuccess();
 
-        void OnFailure();
+        void OnFailure(Exception e);
     }
 
     // this is called when a string is sent
     private interface StringReceived {
-        void OnReceived(String s);
+        void OnStringReceived(String s1, String s);
 
         //When string is succesfully transfered
         void OnUpdate();
@@ -451,7 +463,7 @@ public class NearbyCreator {
     //called when a connection is tried
     private interface ConnectionResult {
         //connection is met and you can start sending
-        void ConnectionGood();
+        void ConnectionGood(String s);
 
         //Connection is rejected by one side
         void ConnectionRejected();
@@ -470,7 +482,7 @@ public class NearbyCreator {
 
         void OnConnectionSuccess();
 
-        void OnConnectionFailure();
+        void OnConnectionFailure(Exception e);
 
         //If connection is lost
         void onConnectionLost();
@@ -478,7 +490,7 @@ public class NearbyCreator {
     }
 
     //This error is thrown when permission is not given
-    private class PermissionDeniedException extends Exception {
+    protected class PermissionDeniedException extends Exception {
         public PermissionDeniedException(String permission) {
             super("The permission " + permission + " was not given. Check if it is a permission the user has to allow");
         }
