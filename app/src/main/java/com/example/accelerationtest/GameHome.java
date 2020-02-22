@@ -2,6 +2,8 @@ package com.example.accelerationtest;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,8 +35,10 @@ public class GameHome extends AppCompatActivity {
     ProgressBar progressBar;
     ConnectivityManager cm;
     NearbyCreator nc;
-    /// when state=1 run mode state 2 viewing state 3 actively tagging state 4 being tagged 5 potentially can
-    // stage 6 out of wifi state 7 when user clicked tag too many times
+    LiveData<GameData> gd;
+    /// when state=1 run mode| state 2 viewing| state 3 actively tagging| state 4 being tagged|
+    // 5 potentially can
+    // stage 6 out of wifi| state 7 when user clicked tag too many times
     int state;
 
     @Override
@@ -42,9 +46,17 @@ public class GameHome extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_home);
         rv = findViewById(R.id.viewTagPlayers);
-        ga = new GameAdapter(null);
+        //initialize GD from data from the cloud
+
+        ga = new GameAdapter(gd.getValue());
         rv.setAdapter(ga);
         rv.setLayoutManager(new LinearLayoutManager(this));
+        gd.observe(this, new Observer<GameData>() {
+            @Override
+            public void onChanged(GameData gameData) {
+                ga.updateData(gameData);
+            }
+        });
         iv = findViewById(R.id.imageView2);
         iv.setBackgroundResource(R.drawable.go321);
         ad = (AnimationDrawable) iv.getBackground();
@@ -54,6 +66,7 @@ public class GameHome extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         nc = new NearbyCreator(this, "com.example.ProjectFitness", Strategy.P2P_POINT_TO_POINT);
+
         tag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,6 +85,8 @@ public class GameHome extends AppCompatActivity {
                         break;
                     case 5:
                         //Actually able to tag
+                        state=3;
+                        nc.startAdvertising("userName",optionsOfAdvertising);
 
                         break;
                     case 6:
@@ -132,6 +147,7 @@ public class GameHome extends AppCompatActivity {
                     tag.setClickable(true);
                     gameStatus.setImageResource(R.drawable.thumb_up);
                     state = 5;
+                    nc.startDiscovery("userName",optionsOfDiscovery);
                 }
             };
         }
@@ -148,12 +164,17 @@ public class GameHome extends AppCompatActivity {
 
         @Override
         public void OnDiscoveryFailure(Exception e) {
+            ///  something is missing
 
         }
 
         @Override
         public void OnStringReceived(String user, String s) {
-
+            //Tagged by user
+            Toast.makeText(GameHome.this,"You have been tagged by "+user,Toast.LENGTH_LONG).show();
+            state=2;
+            gameStatus.setImageResource(R.drawable.eye_view);
+            gd.getValue().getIsInGame().put(user,false);
         }
 
         @Override
@@ -163,21 +184,30 @@ public class GameHome extends AppCompatActivity {
 
         @Override
         public void OnConnectionGood(String s) {
+            state=4;
+            Toast.makeText(GameHome.this,"Run! someone is close",Toast.LENGTH_LONG).show();
 
         }
 
         @Override
         public void OnConnectionError() {
+            state=5;
+            Toast.makeText(GameHome.this,"Close Call! You escaped",Toast.LENGTH_LONG).show();
 
         }
 
         @Override
         public void OnConnectionRejected() {
+            //something is wrong
+
+            Toast.makeText(GameHome.this,"Close Call! You escaped tag",Toast.LENGTH_LONG).show();
 
         }
 
         @Override
         public void OnConnectionDisconnected() {
+            state=5;
+            Toast.makeText(GameHome.this,"Close Call! You escaped",Toast.LENGTH_LONG).show();
 
         }
 
@@ -193,12 +223,86 @@ public class GameHome extends AppCompatActivity {
 
         @Override
         public void OnConnectionFailure(Exception e) {
-
+            e.printStackTrace();
         }
 
         @Override
         public void OnConnectionLost() {
+            state=5;
+            Toast.makeText(GameHome.this,"Close Call! You escaped",Toast.LENGTH_LONG).show();
 
+        }
+    };
+
+    NearbyCreator.OptionsOfAdvertising optionsOfAdvertising= new NearbyCreator.OptionsOfAdvertising() {
+        @Override
+        public void OnDiscoverySuccess() {
+            state=3;
+            Toast.makeText(GameHome.this,"Finding people close by",Toast.LENGTH_LONG).show();
+            ct=new CountDownTimer(15000,15000) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+
+                }
+
+                @Override
+                public void onFinish() {
+                    state=5;
+                    Toast.makeText(GameHome.this,"No nearby Players found",Toast.LENGTH_LONG).show();
+
+                    nc.stopDiscovery();
+                }
+            };
+        }
+
+        @Override
+        public void OnDiscoveryFailure(Exception e) {
+            e.printStackTrace();
+        }
+
+        @Override
+        public void OnStringReceived(String user, String s) {
+
+        }
+
+        @Override
+        public void OnStringUpdate() {
+
+        }
+
+        @Override
+        public void OnConnectionGood(String s) {
+           if(gd.getValue().getIsInGame().get(s)){
+            ct.cancel();
+                nc.sendMessage(s,"1");
+           nc.stopAdvertising();
+           nc.stopConnection(s);}else{
+               state=5;
+               Toast.makeText(GameHome.this,"Found User "+s+" who is out",Toast.LENGTH_LONG).show();
+            nc.stopConnection(s);
+            nc.stopAdvertising();
+           }
+        }
+
+        @Override
+        public void OnConnectionError() {
+            state=5;
+            Toast.makeText(GameHome.this,"Connection Lost so close",Toast.LENGTH_LONG).show();
+
+            nc.stopAdvertising();
+        }
+
+        @Override
+        public void OnConnectionRejected() {
+
+        }
+
+        @Override
+        public void OnConnectionDisconnected() {
+            state=5;
+            Toast.makeText(GameHome.this,"Connection Lost so close",Toast.LENGTH_LONG).show();
+
+            nc.stopAdvertising();
         }
     };
 

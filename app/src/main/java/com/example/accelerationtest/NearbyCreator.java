@@ -36,7 +36,7 @@ public class NearbyCreator {
     private String id;
     private Strategy strategy;
 
-    //Creates a new NearbyCreator with an id that will be shared among all connections and a strategy
+    //Creates a new NearbyCreator with an app-id that will be shared among all connections and a strategy
     public NearbyCreator(Activity context, String id, Strategy strategy)  {
         connections= new ArrayList<>();
         this.context = context;
@@ -197,7 +197,7 @@ public class NearbyCreator {
 
 
         AdvertisingOptions advertisingOptions = new AdvertisingOptions.Builder().setStrategy(strategy).build();
-        Nearby.getConnectionsClient(context)
+        Nearby.getConnectionsClient(context) //id is not supposed to change but advertiser name can
                 .startAdvertising(advertiserName, id, connectionLifecycleCallback, advertisingOptions)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
