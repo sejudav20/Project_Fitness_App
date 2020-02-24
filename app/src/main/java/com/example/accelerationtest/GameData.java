@@ -5,17 +5,37 @@ import java.util.Map;
 
 public class GameData {
     Date d;
+    String name;
+    String creator;
     boolean isGameDone;
     Map<String,Boolean> online;
     Map<String,Boolean> isInGame;
     String gameStatus;
 
-    public GameData(Date d, boolean isGameDone, Map<String, Boolean> online, Map<String, Boolean> isInGame, String gameStatus) {
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public GameData(Date d, String creator,String name, boolean isGameDone, Map<String, Boolean> online, Map<String, Boolean> isInGame, String gameStatus) {
         this.d = d;
+        this.name = name;
         this.isGameDone = isGameDone;
         this.online = online;
         this.isInGame = isInGame;
         this.gameStatus = gameStatus;
+        this.creator=creator;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 
     public void addPerson(String name){

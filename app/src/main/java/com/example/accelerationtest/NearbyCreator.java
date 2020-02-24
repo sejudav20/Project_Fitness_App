@@ -60,6 +60,10 @@ public class NearbyCreator {
 
 
     }
+    //has permission
+    public static boolean hasPermissionToUseNearby(Activity activityContext){
+        return ContextCompat.checkSelfPermission(activityContext, Manifest.permission.ACCESS_COARSE_LOCATION)!= PackageManager.PERMISSION_GRANTED;
+    }
 
     public ConnectionsClient getConnectionClient(){
 

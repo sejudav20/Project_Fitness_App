@@ -47,7 +47,7 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.PlayerHolder> 
     @Override
     public PlayerHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LinearLayout li=(LinearLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.recycle_people_view,parent,false);
-        return null;
+        return new PlayerHolder(li);
     }
 
     @Override

@@ -24,4 +24,5 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="data_policyy">Spartan Soft Tech prioritizes your security and the integrity of your data. Your location is necesary to run the game and will not be shared with any third party users. You location will not be stored outside of the game but will only be used to interact with other players of your choosing. Thank you for understanding and hope you enjoy extreme tag.</string>
 </resources>
