@@ -7,7 +7,10 @@ import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -21,6 +24,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.nearby.connection.DiscoveredEndpointInfo;
 import com.google.android.gms.nearby.connection.Strategy;
+
+import java.util.Map;
+import java.util.Stack;
 
 public class GameHome extends AppCompatActivity {
 
@@ -36,6 +42,7 @@ public class GameHome extends AppCompatActivity {
     ConnectivityManager cm;
     NearbyCreator nc;
     LiveData<GameData> gd;
+    Stack<String> graveStack;
     /// when state=1 run mode| state 2 viewing| state 3 actively tagging| state 4 being tagged|
     // 5 potentially can
     // stage 6 out of wifi| state 7 when user clicked tag too many times
@@ -54,7 +61,7 @@ public class GameHome extends AppCompatActivity {
         gd.observe(this, new Observer<GameData>() {
             @Override
             public void onChanged(GameData gameData) {
-                ga.updateData(gameData);
+                updateData();
             }
         });
         iv = findViewById(R.id.imageView2);
@@ -104,6 +111,50 @@ public class GameHome extends AppCompatActivity {
                 }
             }
         });
+    }
+    public void updateData(){
+        ga.updateData(gd.getValue());
+        GameData updated=gd.getValue();
+        if(graveStack==null){
+            graveStack=new Stack<>();
+        }
+        Map<String,Boolean> map=gd.getValue().getIsInGame();
+        for(String names:map.keySet()){
+            if(!map.get(names)){
+                if(!graveStack.contains(names)){
+                    graveStack.push(names);
+                }
+
+            }
+        }
+
+        if(map.keySet().size()-1==graveStack.size()){
+            AlertDialog.Builder ab= new AlertDialog.Builder(this);
+            ab.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                  startActivity(new Intent(GameHome.this,MainActivity.class));
+
+                }
+            });
+            View v=getLayoutInflater().inflate(R.layout.finalresultsscreen,null);
+            ab.setView(v);
+            RecyclerView rv=v.findViewById(R.id.rankingRecycler);
+            String first="";
+            for(String name:map.keySet()){
+                if(map.get(first)){
+                    first=name;
+                    break;
+                }
+            }
+            rv.setAdapter(new RankingAdapter(first,graveStack));
+            ab.setTitle("Final Results");
+
+            ab.create();
+        }
+    }
+    public void updateCloudData() {
+        //TODO get data from cloud and then update gd
     }
 
     public void changeWifiState(boolean online) {

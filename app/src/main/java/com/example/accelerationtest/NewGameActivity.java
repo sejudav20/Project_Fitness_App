@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 public class NewGameActivity extends AppCompatActivity {
@@ -43,10 +44,13 @@ String user;
                 adb.setPositiveButton("Create", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        GameData gd= new GameData(Calendar.getInstance().getTime(),user,edt.getText().toString(),);
+                        GameData gd= new GameData(Calendar.getInstance().getTime(),user,edt.getText().toString(),false,new HashMap<String, Boolean>(),new HashMap<String, Boolean>(),"join");
+                             //TODO add wait until enough players were added
+
+
                     }
                 });
-
+                adb.create();
             }
         });
         //TODO set live data value from cloud

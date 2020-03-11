@@ -59,7 +59,7 @@ public class NewGamesAdapter extends RecyclerView.Adapter<NewGamesAdapter.Player
                 for (String s : gd.online.keySet()) {
                     st += s + "\n";
                 }
-           
+
                 builder.setMessage("Other Users in this game:\n"+st);
                 builder.setPositiveButton("Join", new DialogInterface.OnClickListener() {
                     @Override

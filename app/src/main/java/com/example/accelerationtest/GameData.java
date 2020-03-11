@@ -11,6 +11,7 @@ public class GameData {
     Map<String,Boolean> online;
     Map<String,Boolean> isInGame;
     String gameStatus;
+    //game status states: "finished" "join" "playing"
 
     public String getName() {
         return name;
@@ -28,6 +29,7 @@ public class GameData {
         this.isInGame = isInGame;
         this.gameStatus = gameStatus;
         this.creator=creator;
+
     }
 
     public String getCreator() {
