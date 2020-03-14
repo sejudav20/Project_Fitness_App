@@ -39,6 +39,7 @@ String user;
                 View aView=getLayoutInflater().inflate(R.layout.create_new_game_alert_dialog,null);
                 final EditText edt=aView.findViewById(R.id.editNewName);
                 adb.setView(aView);
+                //TODO Charith add your data of all games recently created
                 adb.setPositiveButton("Create", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -59,6 +60,7 @@ String user;
             }
         });
         nga=new NewGamesAdapter(liveData.getValue(),this);
+
         rv.setAdapter(nga);
         rv.setLayoutManager(new LinearLayoutManager(this));
 

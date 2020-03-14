@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.Stack;
 
 public class GameHome extends AppCompatActivity {
-
+//TODO Charith This is where the game data will be used to get info
     RecyclerView rv;
     GameAdapter ga;
     AnimationDrawable ad;
@@ -153,7 +153,7 @@ public class GameHome extends AppCompatActivity {
         }
     }
     public void updateCloudData() {
-        //TODO get data from cloud and then update gd
+        //TODO Charith get data from cloud and then update gd
     }
 
     public void changeWifiState(boolean online) {

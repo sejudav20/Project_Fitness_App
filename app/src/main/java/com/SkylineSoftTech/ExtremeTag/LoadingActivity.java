@@ -27,7 +27,9 @@ public class LoadingActivity extends AppCompatActivity {
                 }else{
                     System.exit(0);
                 }
-            }else{startActivity(new Intent(this,MainActivity.class));}
+            }else{
+                //TODO Sam make this go to your login activity or use the activity to sign in automatically
+                startActivity(new Intent(this,MainActivity.class));}
 
     }
 }

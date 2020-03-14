@@ -72,9 +72,17 @@ public class HomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        continueButton= getView().findViewById(R.id.continued);
-        createNewButton= getView().findViewById(R.id.createGame);
-        joinButton= getView().findViewById(R.id.joinGame);
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+            View v=inflater.inflate(R.layout.fragment_home, container, false);
+        // Inflate the layout for this fragment
+        continueButton= v.findViewById(R.id.continued);
+        createNewButton= v.findViewById(R.id.createGame);
+        joinButton= v.findViewById(R.id.joinGame);
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,14 +104,7 @@ public class HomeFragment extends Fragment {
                 startActivity(new Intent(getActivity(),JoinActivity.class));
             }
         });
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

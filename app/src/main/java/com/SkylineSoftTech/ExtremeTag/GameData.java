@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Map;
 
 public class GameData {
+    //TODO Charith this is the class that needs to be stored in the database
     Date d;
     String name;
     String creator;
