@@ -1,4 +1,4 @@
-package com.example.accelerationtest;
+package com.SkylineSoftTech.ExtremeTag;
 
 import java.util.Date;
 import java.util.Map;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.accelerationtest">
+    package="com.SkylineSoftTech.ExtremeTag">
 
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -18,14 +18,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoadingActivity"></activity>
-        <activity android:name=".JoinActivity" />
-        <activity android:name=".GameHome" />
-        <activity android:name=".NewGameActivity" />
+        <activity android:name="com.SkylineSoftTech.ExtremeTag.LoadingActivity"></activity>
+        <activity android:name="com.SkylineSoftTech.ExtremeTag.JoinActivity" />
+        <activity android:name="com.SkylineSoftTech.ExtremeTag.GameHome" />
+        <activity android:name="com.SkylineSoftTech.ExtremeTag.NewGameActivity" />
         <activity
-            android:name=".SettingsActivity"
+            android:name="com.SkylineSoftTech.ExtremeTag.SettingsActivity"
             android:label="@string/title_activity_settings" />
-        <activity android:name=".MainActivity">
+        <activity android:name="com.SkylineSoftTech.ExtremeTag.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

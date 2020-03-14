@@ -1,4 +1,4 @@
-package com.example.accelerationtest;
+package com.SkylineSoftTech.ExtremeTag;
 
 import android.content.Context;
 import androidx.test.platform.app.InstrumentationRegistry;

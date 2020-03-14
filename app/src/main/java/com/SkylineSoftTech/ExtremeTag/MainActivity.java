@@ -1,9 +1,8 @@
-package com.example.accelerationtest;
+package com.SkylineSoftTech.ExtremeTag;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -15,8 +14,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import java.util.Set;
 
 
 public class MainActivity extends AppCompatActivity implements HomeFragment.OnFragmentInteractionListener, ChatFragment.OnFragmentInteractionListener, ProfileFragment.OnFragmentInteractionListener, RecordsFragment.OnFragmentInteractionListener {

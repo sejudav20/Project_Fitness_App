@@ -1,4 +1,4 @@
-package com.example.accelerationtest;
+package com.SkylineSoftTech.ExtremeTag;
 
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class GameAdapter extends RecyclerView.Adapter<GameAdapter.PlayerHolder> {
