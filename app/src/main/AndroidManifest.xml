@@ -18,14 +18,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.SkylineSoftTech.ExtremeTag.LoadingActivity"></activity>
-        <activity android:name="com.SkylineSoftTech.ExtremeTag.JoinActivity" />
-        <activity android:name="com.SkylineSoftTech.ExtremeTag.GameHome" />
-        <activity android:name="com.SkylineSoftTech.ExtremeTag.NewGameActivity" />
+        <activity android:name=".WaitingRoomActivity"></activity>
+        <activity android:name=".LoadingActivity" />
+        <activity android:name=".JoinActivity" />
+        <activity android:name=".GameHome" />
+        <activity android:name=".NewGameActivity" />
         <activity
-            android:name="com.SkylineSoftTech.ExtremeTag.SettingsActivity"
+            android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" />
-        <activity android:name="com.SkylineSoftTech.ExtremeTag.MainActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

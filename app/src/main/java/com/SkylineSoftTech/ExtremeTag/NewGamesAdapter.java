@@ -3,30 +3,41 @@ package com.SkylineSoftTech.ExtremeTag;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.ColorSpace;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.firebase.ui.database.SnapshotParser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.Query;
 
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class NewGamesAdapter extends RecyclerView.Adapter<NewGamesAdapter.PlayerHolder> {
-    List<GameData> gameData;
+public class NewGamesAdapter extends FirebaseRecyclerAdapter<GameData,NewGamesAdapter.PlayerHolder> {
+    Query gameData;
     Context context;
+    String name;
 
-    public NewGamesAdapter(List<GameData> allData, Context context) {
-        gameData = allData;
+    public NewGamesAdapter(Query query, Context context,FirebaseRecyclerOptions<GameData> options,String name) {
+        super(options);
+        gameData = query;
         this.context = context;
-
+        this.name=name;
 
     }
 
-    public void updateData(List<GameData> allData) {
-        gameData = allData;
+    public void updateData(Query q) {
+        gameData = q;
 
         notifyDataSetChanged();
     }
@@ -39,50 +50,46 @@ public class NewGamesAdapter extends RecyclerView.Adapter<NewGamesAdapter.Player
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final PlayerHolder holder, int position) {
-        final GameData gd = gameData.get(position);
+    public void onBindViewHolder(@NonNull final PlayerHolder holder, int position, final GameData gd) {
+
         holder.gameCreator.setText(gd.getCreator());
         holder.gameName.setText(gd.getName());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               AlertDialog.Builder builder=new AlertDialog.Builder(context);
-                builder.setTitle(holder.gameName.getText());
+               if(gd.gameStatus.equals("join")) {
+                   AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                   builder.setTitle(holder.gameName.getText());
 
-                String st = "";
-                for (String s : gd.online.keySet()) {
-                    st += s + "\n";
-                }
+                   String st = "";
+                   for (String s : gd.online.keySet()) {
+                       st += s + "\n";
+                   }
 
-                builder.setMessage("Other Users in this game:\n"+st);
-                builder.setPositiveButton("Join", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //TODO Add Join
-                    }
-                });
-                AlertDialog dialog =builder.create();
-                dialog.show();
+                   builder.setMessage("Other Users in this game:\n" + st);
+                   builder.setPositiveButton("Join", new DialogInterface.OnClickListener() {
+                       @Override
+                       public void onClick(DialogInterface dialog, int which) {
+                           gd.online.put("name",true);
+                           gd.isInGame.put("name",true);
+                           Intent i=new Intent(context,WaitingRoomActivity.class);
+                           i.putExtra("isCreator",false);
+                           i.putExtra("game",gd.getName());
+                           context.startActivity(i);
 
+                       }
+                   });
+                   AlertDialog dialog = builder.create();
+                   dialog.show();
+               }else{
+                   Toast.makeText(context,"The game is already underway",Toast.LENGTH_SHORT).show();
+               }
             }
         });
     }
 
 
-    @Override
-    public int getItemCount() {
-//       int i=0;
-//        for(String name:gameData.isInGame.keySet()){
-//
-//            if(gameData.isInGame.get(name)){
-//                i++;
-//
-//            }
-//
-//        }
-        return gameData.size();
-    }
 
     class PlayerHolder extends RecyclerView.ViewHolder {
         TextView gameName;

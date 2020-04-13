@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class GameData {
     //TODO Charith this is the class that needs to be stored in the database
-    Date d;
+    String d;
     String name;
     String creator;
     boolean isGameDone;
@@ -13,7 +13,7 @@ public class GameData {
     Map<String,Boolean> isInGame;
     String gameStatus;
     //game status states: "finished" "join" "playing"
-
+    public GameData(){}
     public String getName() {
         return name;
     }
@@ -22,7 +22,7 @@ public class GameData {
         this.name = name;
     }
 
-    public GameData(Date d, String creator,String name, boolean isGameDone, Map<String, Boolean> online, Map<String, Boolean> isInGame, String gameStatus) {
+    public GameData(String d, String creator,String name, boolean isGameDone, Map<String, Boolean> online, Map<String, Boolean> isInGame, String gameStatus) {
         this.d = d;
         this.name = name;
         this.isGameDone = isGameDone;
@@ -51,11 +51,11 @@ public class GameData {
 
     }
 
-    public Date getD() {
+    public String getD() {
         return d;
     }
 
-    public void setD(Date d) {
+    public void setD(String d) {
         this.d = d;
     }
 
